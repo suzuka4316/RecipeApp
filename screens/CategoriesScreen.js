@@ -1,25 +1,60 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+
+import { CATEGORIES } from "../data/dummy-data";
+import Colors from "../constants/Colors";
 
 export const CategoriesScreen = (props) => {
-  return (
-    <View style={styles.screen}>
-      <Text>Categories Screen</Text>
-      <Button
-        title="Go to Meals!"
+  const renderGridItem = (itemData) => {
+    return (
+      <TouchableOpacity
+        style={styles.gridItem}
         onPress={() => {
-          // MEMO -- Every screen specified with react-native receives some props and one of them is called 'navigation'. Check MealsNagivator.js for which screens are chosen to use. Make sure you are specifying the screen identifier you defined, not the name of the screen itself.
-          //props.navigation.navigate("CategoryMeals") also works.
           props.navigation.navigate({ routeName: "CategoryMeals" });
-          // MEMO -- props.navigation.push("CategoryMeals") also behaves the same way, unless you're pushing onto the same screen the user is. push() is useful when you want to display different content in the same screen (e.g. like OneDrive, it uses the same screen while moving through the folders, with different content)
-          // MEMO -- props.navigation.replace("CategoryMeals") also behaves the same way, but it pops off the CategoriesScreen, and the next screen (CategoryMeals) will be the first in the stack. There won't be a Back button. (e.f. Login screen, where the logged in user cannot go back once logged in)
         }}
-      />
-    </View>
+      >
+        <View>
+          {/* MEMO -- item property comes from FlatList, title property comes from Category class defined in models folder */}
+          <Text>{itemData.item.title}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  //displaying 2 columns
+  return (
+    <FlatList
+      //keyExtractor is not required for the latest React
+      keyExtractor={(item, index) => item.id}
+      data={CATEGORIES}
+      renderItem={renderGridItem}
+      numColumns={2}
+    />
   );
 };
 
+// MEMO -- In JavaScript, function is an OBJECT!, meaning you can set a property for the function. 'navigationOptions' is an optional property prepared in react-navigation, and you can configure some stylying and so on.
+CategoriesScreen.navigationOptions = {
+  headerTitle: "Meal Categories",
+  headerStyle: {
+    backgroundColor: Platform.OS === "android" ? Colors.primary : "",
+  },
+  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+};
+
 const styles = StyleSheet.create({
+  gridItem: {
+    flex: 1,
+    margin: 15,
+    height: 150,
+  },
   screen: {
     flex: 1,
     justifyContent: "center",
