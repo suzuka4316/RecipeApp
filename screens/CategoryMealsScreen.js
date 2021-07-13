@@ -1,28 +1,37 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-import { CATEGORIES } from "../data/dummy-data";
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import { MealItem } from "../components";
 
 export const CategoryMealsScreen = (props) => {
+  const renderMealItem = (itemData) => {
+    return (
+      <MealItem
+        title={itemData.item.title}
+        image={itemData.item.imageUrl}
+        duration={itemData.item.duration}
+        complexity={itemData.item.complexity}
+        affordability={itemData.item.affordability}
+        onSelectMeal={() => {}}
+      />
+    );
+  };
+
   const catId = props.navigation.getParam("categoryId");
-  const selectedCategory = CATEGORIES.find((cat) => cat.id === catId);
+
+  const displayedMeals = MEALS.filter(
+    //if catId exists in the array of categoryIds, keep the meal
+    (meal) => meal.categoryIds.indexOf(catId) >= 0
+  );
+
   return (
     <View style={styles.screen}>
-      <Text>Category Meal Screen</Text>
-      <Text>{selectedCategory.title}</Text>
-      <Button
-        title="Go to Meal Detail!"
-        onPress={() => {
-          props.navigation.navigate({ routeName: "MealDetail" });
-        }}
-      />
-      <Button
-        title="Go Back!"
-        onPress={() => {
-          props.navigation.goBack();
-          //pop() only works in stack navigator as the name suggests
-          // props.navigation.pop();
-        }}
+      <FlatList
+        data={displayedMeals}
+        keyExtractor={(item, index) => item.id}
+        renderItem={renderMealItem}
+        style={{ width: "100%" }}
       />
     </View>
   );
@@ -42,5 +51,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
   },
 });
