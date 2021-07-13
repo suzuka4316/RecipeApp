@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, Platform } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 
 import { CATEGORIES } from "../data/dummy-data";
-import Colors from "../constants/Colors";
 
 export const CategoryMealsScreen = (props) => {
   const catId = props.navigation.getParam("categoryId");
@@ -35,10 +34,6 @@ CategoryMealsScreen.navigationOptions = (navigationData) => {
   const selectedCategory = CATEGORIES.find((cat) => cat.id === catId);
   return {
     headerTitle: selectedCategory.title,
-    headerStyle: {
-      backgroundColor: Platform.OS === "android" ? Colors.primary : "",
-    },
-    headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
   };
 };
 

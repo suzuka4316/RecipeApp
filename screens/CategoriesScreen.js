@@ -5,11 +5,9 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 
 import { CATEGORIES } from "../data/dummy-data";
-import Colors from "../constants/Colors";
 
 export const CategoriesScreen = (props) => {
   const renderGridItem = (itemData) => {
@@ -46,10 +44,6 @@ export const CategoriesScreen = (props) => {
 // MEMO -- In JavaScript, function is an OBJECT!, meaning you can set a property for the function. 'navigationOptions' is an optional property prepared in react-navigation, and you can configure some stylying and so on.
 CategoriesScreen.navigationOptions = {
   headerTitle: "Meal Categories",
-  headerStyle: {
-    backgroundColor: Platform.OS === "android" ? Colors.primary : "",
-  },
-  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
 };
 
 const styles = StyleSheet.create({

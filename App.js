@@ -4,8 +4,12 @@ import { StyleSheet, Text, View } from "react-native";
 // MEMO -- expo-font allows loading fonts from the web and use them in RN components
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
+// MEMO -- react-native-screens provides primitives to represent screens like UI View or Fragment instead of plain <View> to take advantages of OS behavior and optimizations around screens 
+import { enableScreens } from "react-native-screens";
 
 import MealsNavigator from "./navigation/MealsNavigator";
+
+enableScreens();
 
 const fetchFonts = () => {
   return Font.loadAsync({
