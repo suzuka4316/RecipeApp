@@ -12,7 +12,7 @@ export const CategoriesScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
-    alignItem: "center",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
