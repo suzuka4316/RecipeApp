@@ -6,6 +6,8 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 // import { createDrawerNavigator } from 'react-navigation-drawer';
+// MEMO -- it makes the tab navigator look more android native
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
@@ -40,45 +42,53 @@ const MealsNavigator = createStackNavigator(
   }
 );
 
-const MealsFavTabNavigator = createBottomTabNavigator(
-  {
-    Meals: {
-      screen: MealsNavigator,
-      navigationOptions: {
-        tabBarIcon: (tabInfo) => {
-          return (
-            <Ionicons
-              name="ios-restaurant"
-              size={25}
-              // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
-              color={tabInfo.tintColor}
-            />
-          );
-        },
+const tabScreenConfig = {
+  Meals: {
+    screen: MealsNavigator,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return (
+          <Ionicons
+            name="ios-restaurant"
+            size={25}
+            // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
+            color={tabInfo.tintColor}
+          />
+        );
       },
-    },
-    Favorites: {
-      screen: FavoritesScreen,
-      navigationOptions: {
-        tabBarIcon: (tabInfo) => {
-          return (
-            <Ionicons
-              name="ios-star"
-              size={25}
-              // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
-              color={tabInfo.tintColor}
-            />
-          );
-        },
-      },
+      // MEMO -- this does not affect if 'shifting' property is not set to true!
+      tabBarColor: Colors.secondary,
     },
   },
-  {
-    tabBarOptions: {
-      activeTintColor: Colors.secondary,
+  Favorites: {
+    screen: FavoritesScreen,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return (
+          <Ionicons
+            name="ios-star"
+            size={25}
+            // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
+            color={tabInfo.tintColor}
+          />
+        );
+      },
+      tabBarColor: Colors.primary,
     },
-  }
-);
+  },
+};
+
+const MealsFavTabNavigator =
+  Platform.OS === "android"
+    ? createMaterialBottomTabNavigator(tabScreenConfig, {
+        activeColor: "white",
+        shifting: true,
+      })
+    : createBottomTabNavigator(tabScreenConfig, {
+        tabBarOptions: {
+          activeTintColor: Colors.secondary,
+        },
+      });
 
 // MEMO -- The stack navigator 'MealsNavigator' is now nested inside the tab navigator 'MealsFabTabNavigator'
 /**
