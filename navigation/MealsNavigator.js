@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, Text } from "react-native";
 // MEMO -- createAppContainer is ALWAYS imported from react-navigation, regardless of which react-navigation version you're using
 import { createAppContainer } from "react-navigation";
 // MEMO -- react-navigation-stack manages stacks of screens and the according animations required under the hood
@@ -23,6 +23,12 @@ import {
 const defaultStackNavOptions = {
   headerStyle: {
     backgroundColor: Platform.OS === "android" ? Colors.primary : "",
+  },
+  headerTitleStle: {
+    fontFamily: "open-sans-bold",
+  },
+  headerBackTitleStyle: {
+    fontFamily: "open-sans",
   },
   headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
   // MEMO -- by default, on ios, back button includes the label of the previous screen if it fits in available space, otherwise it says "Back"
@@ -72,6 +78,12 @@ const tabScreenConfig = {
       },
       // MEMO -- this does not affect if 'shifting' property is not set to true!
       tabBarColor: Colors.secondary,
+      tabBarLabel:
+        Platform.OS === "android" ? (
+          <Text style={{ fontFamily: "open-sans-bold" }}>Meals</Text>
+        ) : (
+          "Meals"
+        ),
     },
   },
   Favorites: {
@@ -88,6 +100,12 @@ const tabScreenConfig = {
         );
       },
       tabBarColor: Colors.primary,
+      tabBarLabel:
+        Platform.OS === "android" ? (
+          <Text style={{ fontFamily: "open-sans-bold" }}>Favorites</Text>
+        ) : (
+          "Favorites"
+        ),
     },
   },
 };
@@ -100,6 +118,9 @@ const MealsFavTabNavigator =
       })
     : createBottomTabNavigator(tabScreenConfig, {
         tabBarOptions: {
+          labelStyle: {
+            fontFamily: "open-sans",
+          },
           activeTintColor: Colors.secondary,
         },
       });
