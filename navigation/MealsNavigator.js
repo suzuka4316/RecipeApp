@@ -1,3 +1,4 @@
+import React from "react";
 import { Platform } from "react-native";
 // MEMO -- createAppContainer is ALWAYS imported from react-navigation, regardless of which react-navigation version you're using
 import { createAppContainer } from "react-navigation";
@@ -5,6 +6,7 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 // import { createDrawerNavigator } from 'react-navigation-drawer';
+import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
 import {
@@ -33,15 +35,52 @@ const MealsNavigator = createStackNavigator(
       // MEMO -- by default, on ios, back button includes the label of the previous screen if it fits in available space, otherwise it says "Back"
       headerBackTitle: "Back",
     },
+
+    // MEMO -- you can configure navigationOptions here, but it won't be used the same way as defaultNavigationOptions! You're configuring the nested navigator for the parent navigator (in this case MealsFavTabNavigator).
   }
 );
 
-const MealsFavTabNavigator = createBottomTabNavigator({
-  Meals: MealsNavigator,
-  Favorites: FavoritesScreen,
-});
+const MealsFavTabNavigator = createBottomTabNavigator(
+  {
+    Meals: {
+      screen: MealsNavigator,
+      navigationOptions: {
+        tabBarIcon: (tabInfo) => {
+          return (
+            <Ionicons
+              name="ios-restaurant"
+              size={25}
+              // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
+              color={tabInfo.tintColor}
+            />
+          );
+        },
+      },
+    },
+    Favorites: {
+      screen: FavoritesScreen,
+      navigationOptions: {
+        tabBarIcon: (tabInfo) => {
+          return (
+            <Ionicons
+              name="ios-star"
+              size={25}
+              // MEMO -- a parameter passed in tabBarIcon() includes the default setting of the tab navigation. As the color is set to Color.secondary in tabBarOptions, we can access that through tabInfo
+              color={tabInfo.tintColor}
+            />
+          );
+        },
+      },
+    },
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: Colors.secondary,
+    },
+  }
+);
 
-// MEMO -- Stack navigator 'MealsNavigator' is now nested inside the Tab Navigator
+// MEMO -- The stack navigator 'MealsNavigator' is now nested inside the tab navigator 'MealsFabTabNavigator'
 /**
  * |- createAppContainer (react-navigation)
  * |  |- MealsFabTabNavigator (react-navigation-tabs)
