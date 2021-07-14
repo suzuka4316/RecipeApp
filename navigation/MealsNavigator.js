@@ -5,7 +5,8 @@ import { createAppContainer } from "react-navigation";
 // MEMO -- react-navigation-stack manages stacks of screens and the according animations required under the hood
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-// import { createDrawerNavigator } from 'react-navigation-drawer';
+// MEMO -- side drawer
+import { createDrawerNavigator } from "react-navigation-drawer";
 // MEMO -- it makes the tab navigator look more android native
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +16,7 @@ import {
   CategoriesScreen,
   CategoryMealsScreen,
   FavoritesScreen,
+  FiltersScreen,
   MealDetailScreen,
 } from "../screens";
 
@@ -102,16 +104,29 @@ const MealsFavTabNavigator =
         },
       });
 
+//to display header for FiltersScreen
+const FiltersNavigator = createStackNavigator({
+  Filters: FiltersScreen,
+});
+
+const MainNavigator = createDrawerNavigator({
+  MealsFavs: MealsFavTabNavigator,
+  Filters: FiltersNavigator,
+});
+
 // MEMO -- The stack navigator 'MealsNavigator' and 'FavNavigator' are now nested inside the tab navigator 'MealsFabTabNavigator'
 /**
  * |- createAppContainer (react-navigation)
- * |  |- MealsFabTabNavigator (react-navigation-tabs)
- * |    |- MealsNavigator (react-navigation-stack)
- * |      |- CategoriesScreen
- * |      |- CategoryMealsScreen
- * |      |- MealDetailScreen
- * |    |- FavNavigator (react-navigation-stack)
- * |      |- FavoritesScreen
- * |      |- MealDetailScreen
+ * |  |- MainNavigator (react-navigation-drawer)
+ * |    |- FiltersNavigator (react-navigation-stack)
+ * |      |- FiltersScreen
+ * |    |- MealsFabTabNavigator (react-navigation-tabs)
+ * |      |- MealsNavigator (react-navigation-stack)
+ * |        |- CategoriesScreen
+ * |        |- CategoryMealsScreen
+ * |        |- MealDetailScreen
+ * |      |- FavNavigator (react-navigation-stack)
+ * |        |- FavoritesScreen
+ * |        |- MealDetailScreen
  */
-export default createAppContainer(MealsFavTabNavigator);
+export default createAppContainer(MainNavigator);
