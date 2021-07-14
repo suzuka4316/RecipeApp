@@ -18,6 +18,15 @@ import {
   MealDetailScreen,
 } from "../screens";
 
+const defaultStackNavOptions = {
+  headerStyle: {
+    backgroundColor: Platform.OS === "android" ? Colors.primary : "",
+  },
+  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+  // MEMO -- by default, on ios, back button includes the label of the previous screen if it fits in available space, otherwise it says "Back"
+  headerBackTitle: "Back",
+};
+
 // MEMO -- createStackNavigater also allows you to set a default config as a second object parameter. This default config will be overridden if any of the property is defined specifically in the first object parameter or in a screen.
 const MealsNavigator = createStackNavigator(
   {
@@ -29,16 +38,19 @@ const MealsNavigator = createStackNavigator(
     //this only works in ios, and animation will be slide from bottom
     mode: "modal",
     //initialRouteName: 'Categories',
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: Platform.OS === "android" ? Colors.primary : "",
-      },
-      headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
-      // MEMO -- by default, on ios, back button includes the label of the previous screen if it fits in available space, otherwise it says "Back"
-      headerBackTitle: "Back",
-    },
+    defaultNavigationOptions: defaultStackNavOptions,
 
     // MEMO -- you can configure navigationOptions here, but it won't be used the same way as defaultNavigationOptions! You're configuring the nested navigator for the parent navigator (in this case MealsFavTabNavigator).
+  }
+);
+
+const FavNavigator = createStackNavigator(
+  {
+    Favorites: FavoritesScreen,
+    MealDetails: MealDetailScreen,
+  },
+  {
+    defaultNavigationOptions: defaultStackNavOptions,
   }
 );
 
@@ -61,7 +73,7 @@ const tabScreenConfig = {
     },
   },
   Favorites: {
-    screen: FavoritesScreen,
+    screen: FavNavigator,
     navigationOptions: {
       tabBarIcon: (tabInfo) => {
         return (
@@ -90,10 +102,16 @@ const MealsFavTabNavigator =
         },
       });
 
-// MEMO -- The stack navigator 'MealsNavigator' is now nested inside the tab navigator 'MealsFabTabNavigator'
+// MEMO -- The stack navigator 'MealsNavigator' and 'FavNavigator' are now nested inside the tab navigator 'MealsFabTabNavigator'
 /**
  * |- createAppContainer (react-navigation)
  * |  |- MealsFabTabNavigator (react-navigation-tabs)
  * |    |- MealsNavigator (react-navigation-stack)
+ * |      |- CategoriesScreen
+ * |      |- CategoryMealsScreen
+ * |      |- MealDetailScreen
+ * |    |- FavNavigator (react-navigation-stack)
+ * |      |- FavoritesScreen
+ * |      |- MealDetailScreen
  */
 export default createAppContainer(MealsFavTabNavigator);
